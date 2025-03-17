@@ -112,7 +112,7 @@ button:hover {
   width: calc((100%-48)/3);
   border: 1px solid #808080;
   width: 360px;
-height: 200px;
+  height: 200px;
 }
 
 .img {
@@ -136,7 +136,7 @@ padding: 4px 0px;
 .baner-info-li-title {
   font-weight: 600;
   font-size: 12px;
-  line-height: 1.33333;
+  line-height: 1.33;
   letter-spacing: 0.04em;
   color: #2e2f42;
 
