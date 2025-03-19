@@ -1,7 +1,7 @@
 // функції для відображення елементів інтерфейсу
 
-export function createCart (item) {
-      const {
+export function createCart (element) {
+ const {
       webformatURL,
       largeImageURL,
       tags,
@@ -9,7 +9,7 @@ export function createCart (item) {
       views,
       comments,
       downloads,
-    } = item;
+    } = element;
     return ` 
         <li class="li-gallery">
 
@@ -39,3 +39,4 @@ export function createCart (item) {
         </ul>
         </li> `;
 }
+
