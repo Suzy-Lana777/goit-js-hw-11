@@ -9,7 +9,8 @@ export function createCart (element) {
       views,
       comments,
       downloads,
-    } = element;
+  } = element;
+  
     return ` 
         <li class="li-gallery">
 
