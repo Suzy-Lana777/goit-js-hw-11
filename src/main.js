@@ -30,7 +30,7 @@
     //перевіряємо, щоб не вводили пусте в інпут
       if (userRequest === '') { button.disabled = true; return; }
      
-      refs.loader.classList.toggle(`hidden`);
+      refs.loader.classList.toggle(`visually-hidden`);
  
     //робимо запит на сервер pixabay.com за своїм клієнт ключем та параметрами з документації АРІ
     nttpRequest (userRequest)
