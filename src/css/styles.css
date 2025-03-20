@@ -61,11 +61,11 @@ letter-spacing: 0.04em;
 }
 
 .form-container {
-  width: 1128px;
+  width: 1135px;
   margin: auto;
-display: flex;
-gap: 8px;
-padding-top: 36px;
+  display: flex;
+  gap: 8px;
+  padding-top: 36px;
 }
 
 .form {
