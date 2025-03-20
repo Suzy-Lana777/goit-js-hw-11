@@ -165,7 +165,7 @@ color: #2e2f42;
 /* =======================loader=================== */
 
 .loader {
-        margin-left: 730px;
+        margin-left: 750px;
         position: relative;
         transform: rotateZ(45deg);
         perspective: 1000px;
