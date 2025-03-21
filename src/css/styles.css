@@ -113,7 +113,7 @@ button:hover {
   margin: auto;
   }
  
-.ul-gallery {
+.gallery {
   display: flex;
   gap: 24px;
   flex-wrap: wrap;

@@ -11,7 +11,7 @@
     // шукаємо форму і вішаємо на її сабміт слухача 
     const refs = {
       form: document.querySelector (`.form`),
-      ulGallery: document.querySelector (`.ul-gallery`),
+      ulGallery: document.querySelector (`.gallery`),
       button: document.querySelector ('.button'),
       loader: document.querySelector ('.loader'),
     };
@@ -60,7 +60,7 @@
     refs.form.reset();
       
     //відмальовуємо великі зображення за допомогою бібліотеки SimpleLightbox
-    const elemSimpleLightbox = new SimpleLightbox(`.ul-gallery a`, {
+    const elemSimpleLightbox = new SimpleLightbox(`.gallery a`, {
       captionsData: `alt`,
       animationSpeed: 250,
     });
