@@ -1,17 +1,16 @@
     import iziToast from "izitoast";
     import "izitoast/dist/css/iziToast.min.css";
-    // simplelightbox
-    import SimpleLightbox from "simplelightbox";
-    import "simplelightbox/dist/simple-lightbox.min.css";
+    
 
     //імпортуємо свої функції для НТТР та відмальовування на сторінці лішок
-    import {nttpRequest} from "./js/pixabay-api";
-    import {createCart} from "./js/render-functions";
+    import nttpRequest from "./js/pixabay-api";
+    import createHTML from "./js/render-functions";
 
     // шукаємо форму і вішаємо на її сабміт слухача 
     const refs = {
       form: document.querySelector (`.form`),
-      ulGallery: document.querySelector (`.gallery`),
+      input: document.querySelector ('.input'),
+      gallery: document.querySelector (`.gallery`),
       button: document.querySelector ('.button'),
       loader: document.querySelector ('.loader'),
     };
@@ -19,54 +18,67 @@
     refs.form.addEventListener (`submit`, request);
 
     function request(event) {          
-      
+     
     // подія сабміт робить оновлення сторінки, ми це скидаємо 
      event.preventDefault();
     
     // ідемо через event.currentTarget.elements.(ім,я з name HTML) + .trim(), щоб не було пробілів
 
-    const userRequest = event.currentTarget.elements.user_request.value.trim(); 
+      const userRequest = refs.input.value.trim(); 
 
     //перевіряємо, щоб не вводили пусте в інпут
-      if (userRequest === '') { button.disabled = true; return; }
+        if (userRequest === '') {
+          iziToast.warning({
+          position: 'topRight',
+          title: 'WARN',
+          message: 'You have not specified any search parameters.',
+      });
+      }
      
-      refs.loader.classList.toggle(`visually-hidden`);
- 
-    //робимо запит на сервер pixabay.com за своїм клієнт ключем та параметрами з документації АРІ
-    nttpRequest (userRequest)
-    .then (serverInform => {
+        clear();
+        removeLoader();
 
-    //перевірка справжніх слів
-    if (serverInform.hits.length === 0) {
-      refs.loader.classList.toggle(`visually-hidden`);
+        nttpRequest(userRequest)
+          .then(data => {
+            if (data.data.hits.length === 0) {
+          
+          clear();
+          showLoader();
+          iziToast.error({
+            title: 'ERROR',
+            message: `Sorry, there are no images matching your search query. Please try again!`,
+            position: 'topRight',
+          });
+        }
+
+        createHTML(data.data.hits);
+      })
+      .catch(error => {
+        clear();
+        showLoader();
         iziToast.error({
-        position: 'topRight' ,
-        message: 'Sorry, there are no images matching your search query. Please try again!',
-    });
-
-
-    refs.ulGallery.innerHTML = '';
-    refs.form.reset();
-    return;}
-
-    const gallaryCard = serverInform.hits.map(el =>createCart(el)).join('');
-    // метод меп перебирає масив об,єктів і видає на кожній ітерації 1 обєкт , який заповнений рядками з описами кожної картки 
-    //але нам потрібен 1 рядок, а не масив рядків, тому ми викликаємо метод .join  і зшиваємо це до купи
-    //робимо функцію createCart, яка буде перетворювати отримані данні з сервера на розмітку на сторінці. Створювати картку в HTML з данними, які прийшли з сервера. 
-    //додаємо на сторінку через innerHTML у знайдений список
+          title: 'ERROR',
+          message: `Error fetching images: ${error}`,
+          position: 'topRight',
+        });
+      });
     
-    refs.ulGallery.innerHTML = gallaryCard;
-    refs.loader.classList.toggle (`visually-hidden`);
-    refs.form.reset();
-      
-    //відмальовуємо великі зображення за допомогою бібліотеки SimpleLightbox
-    const elemSimpleLightbox = new SimpleLightbox(`.gallery a`, {
-      captionsData: `alt`,
-      animationSpeed: 250,
-    });
-      elemSimpleLightbox.refresh();
-    })
+      showLoader();
 
-    .catch(error => { console.log(error); }
-    )
+      event.target.reset();
+
 };
+    
+function showLoader() {
+      refs.loader.classList.toggle(`visually-hidden`);
+      // refs.loader.classList.add('visually-hidden');
+    }
+
+    function removeLoader() {
+      refs.loader.classList.remove('visually-hidden');
+    }
+
+    function clear() {
+      refs.gallery.innerHTML = '';
+    }
+      

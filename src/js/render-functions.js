@@ -1,7 +1,16 @@
 // функції для відображення елементів інтерфейсу
 
-export function createCart (element) {
- const {
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
+export default function createHTML(data) {
+  const refs = {
+    list: document.querySelector('.gallery'),
+    loader: document.querySelector('.loader'),
+  };
+
+  function createCart(item) {
+    const {
       webformatURL,
       largeImageURL,
       tags,
@@ -9,7 +18,7 @@ export function createCart (element) {
       views,
       comments,
       downloads,
-  } = element;
+    } = item;
   
     return ` 
         <li class="li-gallery">
@@ -39,5 +48,22 @@ export function createCart (element) {
             </li>
         </ul>
         </li> `;
-}
 
+  }
+
+  function createsCart(items) {
+      return items.map(createCart).join('');
+    }
+
+    const markup = createsCart(data);
+    refs.list.insertAdjacentHTML('afterbegin', markup);
+
+    let lightbox = new SimpleLightbox('.gallery a', {
+      captionsData: 'alt',
+      animationSpeed: 250,
+    });
+  
+    lightbox.refresh();
+    refs.loader.classList.add('hidden');
+
+}
