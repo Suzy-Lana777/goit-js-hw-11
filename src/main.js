@@ -1,84 +1,64 @@
-    import iziToast from "izitoast";
-    import "izitoast/dist/css/iziToast.min.css";
-    
 
-    //імпортуємо свої функції для НТТР та відмальовування на сторінці лішок
-    import nttpRequest from "./js/pixabay-api";
-    import createHTML from "./js/render-functions";
 
-    // шукаємо форму і вішаємо на її сабміт слухача 
-    const refs = {
-      form: document.querySelector (`.form`),
-      input: document.querySelector ('.input'),
-      gallery: document.querySelector (`.gallery`),
-      button: document.querySelector ('.button'),
-      loader: document.querySelector ('.loader'),
-    };
-        
-    refs.form.addEventListener (`submit`, request);
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import httpRequest from './js/pixabay-api';
+import { renderGallery, clearGallery } from './js/render-functions';
 
-    function request(event) {          
-     
-    // подія сабміт робить оновлення сторінки, ми це скидаємо 
-     event.preventDefault();
-    
-    // ідемо через event.currentTarget.elements.(ім,я з name HTML) + .trim(), щоб не було пробілів
+const refs = {
+  form: document.querySelector('.form'),
+  input: document.querySelector('.input'),
+  gallery: document.querySelector('.gallery'),
+  loader: document.querySelector('.loader'),
+};
 
-      const userRequest = refs.input.value.trim(); 
+refs.form.addEventListener('submit', request);
 
-    //перевіряємо, щоб не вводили пусте в інпут
-        if (userRequest === '') {
-          iziToast.warning({
-          position: 'topRight',
-          title: 'WARN',
-          message: 'You have not specified any search parameters.',
-      });
-      }
-     
-        clear();
-        removeLoader();
+function request(event) {
+  event.preventDefault();
+  const userRequest = event.currentTarget.elements.user_request.value.trim();
 
-        nttpRequest(userRequest)
-          .then(data => {
-            if (data.data.hits.length === 0) {
-          
-          clear();
-          showLoader();
-          iziToast.error({
-            title: 'ERROR',
-            message: `Sorry, there are no images matching your search query. Please try again!`,
-            position: 'topRight',
-          });
-        }
+  if (!userRequest) {
+    iziToast.warning({
+      title: 'WARNING',
+      message: 'Please enter a search term.',
+      position: 'topRight',
+    });
+    return;
+  }
 
-        createHTML(data.data.hits);
-      })
-      .catch(error => {
-        clear();
-        showLoader();
+  clearGallery();
+  showLoader();
+
+  httpRequest(userRequest)
+    .then(images => {
+      hideLoader();
+      if (images.length === 0) {
         iziToast.error({
           title: 'ERROR',
-          message: `Error fetching images: ${error}`,
+          message: 'No images found. Try another search term!',
           position: 'topRight',
         });
+        return;
+      }
+      renderGallery(images);
+    })
+    .catch(error => {
+      hideLoader();
+      iziToast.error({
+        title: 'ERROR',
+        message: `Error fetching images: ${error.message}`,
+        position: 'topRight',
       });
-    
-      showLoader();
+    });
 
-      event.target.reset();
+  event.target.reset();
+}
 
-};
-    
 function showLoader() {
-      refs.loader.classList.toggle(`visually-hidden`);
-      // refs.loader.classList.add('visually-hidden');
-    }
+  refs.loader.classList.add('hidden');  // Показуємо loader
+}
 
-    function removeLoader() {
-      refs.loader.classList.remove('visually-hidden');
-    }
-
-    function clear() {
-      refs.gallery.innerHTML = '';
-    }
-      
+function hideLoader() {
+  refs.loader.classList.remove('hidden');  // Ховаємо loader
+}

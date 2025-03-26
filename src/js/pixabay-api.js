@@ -1,72 +1,23 @@
-// написання функції для HTTP-запитів
+// // написання функції для HTTP-запитів
 
 import axios from 'axios';
-axios.defaults.baseURL = 'https://pixabay.com';
-// axios.defaults.baseURL = 'https://jsonplaceholder.typicode.com';
 
-export default function nttpRequest(userRequest) {
-    // const options = {
-    //     params: {
-            const paramsForHttp = new URLSearchParams ({
-            q: userRequest,
-            key: `49399736-5639b789053676a95c3f2e38d`,
-            image_type: `photo`,
-            orientation: `horizontal`,
-            safesearch: true,
+axios.defaults.baseURL = 'https://pixabay.com/api/';  // Це має бути правильно
 
-        })
-    
-     return axios.get(`https://pixabay.com/api/?${paramsForHttp}`);
-    }
-    // return fetch (`https://pixabay.com/api/?${paramsForHttp}`)
+const API_KEY = '49399736-5639b789053676a95c3f2e38d';  // Перевірити, чи ключ правильний
 
-    // //обробляємо відповідь що прийшла 
-    // .then (queryResult=>{
-    // //робимо перевірку, якщо інфа прийшла з помилкою, то перекидаємо у catch
-    // if (!queryResult.ok)
-    //   {throw new Error(queryResult.status);}
-        
-    // //а якщо все ок, тоді РОЗПАРШУЄМО данні для наступного then
-    // return queryResult.json();
-    // })
-    
-   
+export default function httpRequest(userRequest) {
+  const paramsForHttp = new URLSearchParams({
+    q: userRequest,
+    key: API_KEY,
+    image_type: 'photo',
+    orientation: 'horizontal',
+    safesearch: true,
+  });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// export function nttpRequest (userRequest) {
-//     const params = new URLSearchParams ({
-//         q: searchUser,
-//         key: `49399736-5639b789053676a95c3f2e38d`,
-//         image_type: `photo`, 
-//         orientation: `horizontal`,
-//         safesearch : true,
-//     }) 
-
-//     return fetch (`https://pixabay.com/api/?${paramsForHttp}`)
-
-//     //обробляємо відповідь що прийшла 
-//     .then (queryResult=>{
-//     //робимо перевірку, якщо інфа прийшла з помилкою, то перекидаємо у catch
-//     if (!queryResult.ok)
-//       {throw new Error(queryResult.status);}
-        
-//     //а якщо все ок, тоді РОЗПАРШУЄМО данні для наступного then
-//     return queryResult.json();
-//     })
-
-
-// }
+  return axios.get(`?${paramsForHttp}`)
+    .then(response => response.data.hits)  // Перевіряємо, чи відповідає структура даних
+    .catch(error => {
+      throw error;  // Повертати повну помилку, щоб вона була доступною в `index.js`
+    });
+}
