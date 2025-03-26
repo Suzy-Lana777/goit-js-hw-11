@@ -8,7 +8,7 @@ const API_KEY = '49399736-5639b789053676a95c3f2e38d';  // Перевірити, 
 
 export default function httpRequest(userRequest) {
   const paramsForHttp = new URLSearchParams({
-    q: userRequest,
+    q: userRequest, 
     key: API_KEY,
     image_type: 'photo',
     orientation: 'horizontal',

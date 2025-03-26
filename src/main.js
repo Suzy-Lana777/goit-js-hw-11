@@ -56,9 +56,9 @@ function request(event) {
 }
 
 function showLoader() {
-  refs.loader.classList.add('hidden');  // Показуємо loader
+  refs.loader.classList.remove('visually-hidden');  // Показуємо loader
 }
 
 function hideLoader() {
-  refs.loader.classList.remove('hidden');  // Ховаємо loader
+  refs.loader.classList.add('visually-hidden');  // Ховаємо loader
 }
